@@ -61,8 +61,45 @@ void SelectionSort(int *vet, int vet_len){
 	}
 }
 
-void MergeSort(int *vet, int vet_len){
-	//PAG 69 (PDF)
+void intercala(int *vet, int vet_len, int inicio, int fim, int meio){
+	int poslivre, inicio_vet1, inicio_vet2, i;
+	int aux[vet_len];
+	inicio_vet1 = inicio;
+	inicio_vet2 = meio + 1;
+	poslivre = inicio;
+	while(inicio_vet1 <= meio && inicio_vet2 <= fim){
+		if(vet[inicio_vet1] <= vet[inicio_vet2]){
+			aux[poslivre] = vet[inicio_vet1];
+			inicio_vet1++;
+		}else{
+			aux[poslivre] = vet[inicio_vet2];
+			inicio_vet2++;
+		}
+		poslivre++;
+	}
+	//se ainda existem números no primeiro vetor que não foram intercalados
+	for(i=inicio_vet1;i<=meio;i++){
+		aux[poslivre] = vet[i];
+		poslivre++;
+	}
+	//se ainda existem números no segundo vetor que não foram intercalados
+	for(i=inicio_vet2;i<=fim;i++){
+		aux[poslivre] = vet[i];
+		poslivre++;
+	}
+	//retorna os valores do vetor aux para o vetor X
+	for(i=inicio;i<=fim;i++)
+		vet[i] = aux[i];
+}
+
+void MergeSort(int *vet, int vet_len, int inicio, int fim){
+	int meio;
+	if(inicio < fim){
+		meio = (inicio+fim)/2;
+		MergeSort(vet, inicio, meio);
+		MergeSort(vet, meio+1, fim);
+		intercala(vet, inicio, fim, meio);
+	}
 }
 
 int main(){
