@@ -96,11 +96,90 @@ void MergeSort(int *vet, int vet_len, int inicio, int fim){
 	int meio;
 	if(inicio < fim){
 		meio = (inicio+fim)/2;
-		MergeSort(vet, inicio, meio);
-		MergeSort(vet, meio+1, fim);
-		intercala(vet, inicio, fim, meio);
+		MergeSort(vet, vet_len, inicio, meio);
+		MergeSort(vet, vet_len, meio+1, fim);
+		intercala(vet, vet_len, inicio, fim, meio);
 	}
 }
+
+void troca(int *vet, int i, int j){
+	int aux;
+	aux = vet[i];
+	vet[i] = vet[j];
+	vet[j] = aux;
+}
+
+int particao(int *vet, int p, int r){
+	int pivo, i, j;
+	pivo = vet[(p+r)/2];
+	i = p-1;
+	j = r+1;
+	while(i < j){
+		do{
+			j--;
+		}while(vet[j] > pivo);
+		do{
+			i++;
+		}while(vet[i] < pivo);
+		if(i<j) troca(vet, i, j);
+	}
+	return j;
+}
+
+void QuickSort(int *vet, int vet_len, int p, int r){
+	int q;
+	if(p < r){
+		q = particao(vet, p, r);
+		QuickSort(vet, vet_len, p, q);
+		QuickSort(vet, vet_len, q+1, r);
+	}
+}
+
+//Heap Sort
+void heap_fica(int *vet, int i, int qtde){ //qtde corresponde o tamanho do vetor
+	int f_esq,  f_dir, maior, aux;
+	maior = i;
+	if(2*i+1 <= qtde){
+		//o nó que está sendo analisado tem filhos a esquerda e direita
+		f_esq = 2*i+1;
+		f_dir = 2*i;
+		if(vet[f_esq] >= vet[f_dir] && vet[f_esq] > vet[i])
+			maior = 2*i+1;
+		else if(vet[f_dir] > vet[f_esq] && vet[f_dir] > vet[i])
+			maior = 2*i;
+	} else if(2*i <= qtde){
+		// o nó que está sendo analisado tem filhos apenas para a direita
+		f_dir = 2*i;
+		if(vet[f_dir] > vet[i]){
+			maior = 2*i;
+		}
+		if(maior != i){
+			aux = vet[i];
+			vet[i] = vet[maior];
+			vet[maior] = aux;
+			heap_fica(vet, maior, qtde);
+		}
+	}
+}
+
+void transforma_heap(int *vet, int qtde){
+	int i, pai, aux;
+	for(i=qtde/2;i>=2;i--){
+		heap_fica(vet, i, qtde);
+	}
+}
+
+void ordena(int *vet, int qtde){
+	int i, aux, ultima_posi;
+	for(i=qtde/2;i>=2;i--){
+		aux = vet[1];
+		vet[1] = vet[i];
+		vet[i] = aux;
+		ultima_posi = i-1;
+		heap_fica(vet, 1, ultima_posi);
+	}
+}
+
 
 int main(){
 
