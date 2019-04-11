@@ -7,7 +7,6 @@ class Grafo(object):
         self.vertices = None
         self.arestas = None
         self.param_a = None
-        self.param_b = None
         return
 
     def _algortmoDeOrdencaoErro(self):
@@ -15,10 +14,9 @@ class Grafo(object):
             print('Algoritmo de Ordencação Nulo, finalizando programa.')
             raise ValueError
 
-    def estabelecerAlgoritmoDeOrdencao(self, algoritimoDeOrdenacao, param_a = None, param_b = None):
+    def estabelecerAlgoritmoDeOrdencao(self, algoritimoDeOrdenacao, param_a = None):
         self.algoritimoDeOrdenacao = algoritimoDeOrdenacao
         self.param_a = param_a
-        self.param_b = param_b
 
     def executarKruskal(self):
         self._algortmoDeOrdencaoErro()
@@ -49,8 +47,8 @@ class Grafo(object):
         print('Executando kruskal, aguarde...')
         floresta =  [ [vertice['id'] ] for vertice in self.vertices]
         arvoreGeradoraMinima = []
-        if self.param_a != None and self.param_b != None:
-            arestasOrdenadas = self.algoritimoDeOrdenacao.ordenar( copy.copy(self.arestas), self.param_a, self.param_b )
+        if self.param_a != None:
+            arestasOrdenadas = self.algoritimoDeOrdenacao.ordenar( copy.copy(self.arestas), 0, len(self.arestas)-1, self.param_a)
         else:
             arestasOrdenadas = self.algoritimoDeOrdenacao.ordenar( copy.copy(self.arestas) )
         while len(arestasOrdenadas):

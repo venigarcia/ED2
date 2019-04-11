@@ -1,3 +1,7 @@
+import random
+import sys
+sys.setrecursionlimit(1000000)
+
 '''
 Introdução:
 - Implementar algoritmo de ordenação que receba uma colecão
@@ -97,18 +101,44 @@ class MergeSort(object):
             return colecao
 
 class QuickSort(object):
-    def ordenar(self, colecao, inicio, fim):
-        #print("Ordena: " + str(inicio) + " " + str(fim))
+    def ordenar(self, colecao, inicio, fim, pivoType):
         if inicio < fim:
-            posPivo = self.particiona(colecao, inicio, fim)
+            posPivo = self.particiona(colecao, inicio, fim, pivoType)
             
-            self.ordenar(colecao, inicio, posPivo-1)
-            self.ordenar(colecao, posPivo+1, fim)
+            self.ordenar(colecao, inicio, posPivo-1, pivoType)
+            self.ordenar(colecao, posPivo+1, fim, pivoType)
             
             return colecao
 
-    def particiona(self, colecao, inicio, fim):
-        #print("Particiona: " + str(inicio) + " " + str(fim))
+    def particiona(self, colecao, inicio, fim, pivoType):
+        if pivoType == 2: #para o pivor ser um indice aleatório
+            rndIndex = random.randint(inicio, fim)
+            #joga o indice eleito para o fina do vetor
+            colecao[rndIndex], colecao[fim] = colecao[fim], colecao[rndIndex]
+        elif pivoType == 3: #para que o pivor seja a mediana do inicio e fim
+            meio = int((inicio+fim)/2)
+            a = int(colecao[inicio]['weight'])
+            b = int(colecao[meio]['weight'])
+            c = int(colecao[fim]['weight'])
+
+            if a < b:
+                if b < c:
+                    mediana = meio
+                else:
+                    if a < c:
+                        mediana = fim
+                    else:
+                        mediana = inicio
+            else:
+                if c < b:
+                    mediana = meio
+                else:
+                    if c < a:
+                        mediana = fim
+                    else:
+                        mediana = inicio            
+            colecao[mediana], colecao[fim] = colecao[fim], colecao[mediana]
+
         pivo = int(colecao[fim]['weight'])
         i = (inicio - 1)
 
@@ -119,24 +149,6 @@ class QuickSort(object):
 
         colecao[i+1], colecao[fim] = colecao[fim], colecao[i+1]
         return (i+1)
-
-        '''
-        while i <= f:
-            if int(colecao[i]['weight']) <= int(pivo['weight']):
-                i+=1
-            elif int(pivo['weight']) < int(colecao[f]['weight']):
-                f-=1
-            else:
-                troca = colecao[i]
-                colecao[i] = colecao[f]
-                colecao[f] = troca
-                i+=1
-                f-=1
-        colecao[inicio] = colecao[f]
-        colecao[f] = pivo
-        
-        return f
-        '''
 
 class HeapSort(object):
     def ordenar(self, colecao):
