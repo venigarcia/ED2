@@ -23,19 +23,14 @@ int(colecao[i]['weight']) < int(colecao[j]['weight'])
 # Sua classe algoritmo de ordenação precisar ter um método ordenar
 class InsertionSort(object):
     def ordenar(self, colecao):
-        '''
-        O método ordenar recebe uma colecão
-        realiza ordenacão na colecão
-        retorna colecão após ordenação
-        '''
         for j in range(1, len(colecao)):
-            chave = int(colecao[j]['weight'])
+            chave = colecao[j]
             i = j-1
-            while i>=0 and int(colecao[i]['weight']) > chave:
-                colecao[i+1]['weight'] = int(colecao[i]['weight'])
+            while i>=0 and int(chave['weight']) < int(colecao[i]['weight']):
+                colecao[i+1] = colecao[i]
                 i-=1
-        colecao[i+1]['weight'] = chave
-        
+            colecao[i+1] = chave
+
         return colecao
 
 class SelectionSort(object):
@@ -45,9 +40,7 @@ class SelectionSort(object):
             for j in range(i, len(colecao)):
                 if int(colecao[j]['weight']) < int(colecao[m]['weight']):
                     m = j
-                temp = colecao[m]
-                colecao[m] = colecao[i]
-                colecao[i] = temp
+                colecao[m], colecao[i] = colecao[i], colecao[m]
 
         return colecao
 

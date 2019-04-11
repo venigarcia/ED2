@@ -46,5 +46,5 @@ if __name__ == "__main__":
     grafo.estabelecerAlgoritmoDeOrdencao(algoritimoDeOrdenacao, args.pivo)
     grafo.carregarGrafo(arquivoJson)
 
-    arvoreGeradoraMinima =  grafo.executarKruskal() 
+    arvoreGeradoraMinima =  grafo.executarKruskal()
     SalvarArvoreGeradoraMinimaEmArquivo(arquivoDeSaida, arvoreGeradoraMinima)
