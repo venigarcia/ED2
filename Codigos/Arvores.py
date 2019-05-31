@@ -185,17 +185,20 @@ class ArvoreRubroNegra:
 
 class ArvoreB:
 
-    self.ordem = None
+    ordem = None
+    raiz = None
 
-    def __init__(self, ordem=None): #cria uma página para a árvore
+    def __init__(self, ordem=None, raiz=None): #cria uma página para a árvore
         self.totalChaves = 0 #armazena o total de chaves da página
         self.chaves = [] #armazena as chaves da árvore
         self.filhos = [] #armazena os filhos
         if self.ordem is None:
             self.ordem = ordem
+        if self.raiz is None:
+            self.raiz = raiz
 
     def isFolha(self):
-        if len(filhos) == 0:
+        if len(self.filhos) == 0:
             return True
         else:
             return False
@@ -211,8 +214,7 @@ class ArvoreB:
         if self.isFolha():
             return None
         else:
-            return buscaPag(self.filhos[i], k)
-
+            return self.filhos[i].buscaChave(chave)
 
     def inserir(self, chave, chavePromovida=None):
         '''
@@ -223,11 +225,15 @@ class ArvoreB:
         if localInsert is None:
             #verifica se está vázio
             if self.totalChaves == 0:
-                self.chaves[self.totalChaves] = chave
+                self.chaves.append(chave)
+                self.chaves.sort()
                 self.totalChaves+=1
+                self.raiz = self
             else:
+                r = self.raiz
                 if(self.totalChaves == self.ordem):
-                    s = ArvoreB()
+                    s = ArvoreB(self.ordem, r)
+                    self.raiz = s
                     s.filhos.append(self)
                     s.split(0, r)
                     s.insereNaoCheio(chave)
@@ -237,25 +243,28 @@ class ArvoreB:
             return None
     
     def insereNaoCheio(self, chave):
-        i = self.totalChaves
+        i = self.totalChaves - 1
 
         if self.isFolha():
-            self.chaves.add(chave).sort()
+            self.chaves.append(chave)
+            self.chaves.sort()
             self.totalChaves+=1
         else:
             while i>=0 and chave < self.chaves[i]:
                 i-=1
             i+=1
-            if self.filhos[i].totalChaves == ordem:
+            if self.filhos[i].totalChaves == self.ordem:
                 self.split(i, self.filhos[i])
                 if chave > self.chaves[i]:
                     i+=1
             self.filhos[i].insereNaoCheio(chave)    
             
     def split(self, i, y):
+        print('Split')
         dif = 1
+        print(self.ordem)
         t = int(math.floor((self.ordem-1)/2))
-        z = ArvoreB()
+        z = ArvoreB(self.ordem)
         z.totalChaves = t
         if (self.ordem-1) % 2 == 0: #verifica se é par
             dif = 0  
@@ -272,6 +281,7 @@ class ArvoreB:
         y.totalChaves-=1
         self.totalChaves+=1
 
+    '''
     def remove(self, chave):
         node = self.buscaChave(chave)
         if not node is None:
@@ -291,11 +301,11 @@ class ArvoreB:
             node.chaves[i] = y
             ante.balancear()
 
-    def balancear(): #balanceia_folha()
+    def balancear(self): #balanceia_folha()
         if self.totalChaves < math.floor((self.ordem-1)/2):
             pai = self.getPai()
             j = 0
-            while pai.filhos[j] not is self:
+            while not pai.filhos[j] is self:
                 j+=1
             if j == 0 or pai.filhos[j-1].totalChaves == math.floor((self.ordem-1)/2):
                 if j == pai.totalChaves + 1 or pai.filhos[j].totalChaves == math.floor((self.ordem-1)/2):
@@ -305,34 +315,50 @@ class ArvoreB:
             else:
                 pai.balancear_esq_dir(j-1, pai.filhos[j-1], self)
     
-    def podar(): #diminui_altura()
+    def podar(self, raiz): #diminui_altura()
+        node = ArvoreB()
+
+        if raiz is self:
+            if self.totalChaves == 0:
+                raiz = self.filhos[0]
+                del self.filhos[0]
+        else:
+            t = math.floor((self.ordem-1)/2)
+
+            if self.totalChaves < t:
+                pai = self.getPai()
+                j = 0
+                while pai.filhos(j) != self:
+                    j+=1
+                if j > 0:
+                    pai.mergeNode(pai, j)
+                else:
+                    pai.mergeNode(pai, 1)
+                pai.podar(raiz)
     
-    
-    def balancear_esq_dir():
+    def balancear_esq_dir(self, e, esq, dire):
+        dire.totalChaves+=1
+        dire.insert(0, self.chaves[e])
+        self.chaves.insert(e, esq.chaves[esq.totalChaves - 1])
 
     def balancear_dir_esq():
     
     def mergeNode():
 
     def antecessor():
+    '''
 
-    
-
-
-    
-
-
-        
-    
-
-
+    def imprimeArvore(self, indent = 0):
+        print(" " * indent + str(self.chaves))
+        for filhos in self.filhos:
+            filhos.imprimeArvore(indent + 2)
 
 #v = [1, 4, 3, 5, 6, 7]
 #a = ArvoreRubroNegra(2)
 v = [2, 14, 1, 7, 13, 15, 5, 8, 4]
-a = ArvoreRubroNegra(11)
+a = BTree(4)
 for value in v:
-    print(value)
-    a.insere(value)
-    a.imprimeArvore()
+    print("A inserir: ", value)
+    a.insert(value)
+    print(a)
     print('-'*15)
